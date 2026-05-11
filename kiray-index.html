@@ -1425,12 +1425,12 @@
     <!-- NAV -->
     <nav>
       <div class="nav-inner">
-        <div class="logo">Kiray</div>
+        <div class="logo" onclick="gotohome()">Kiray</div>
         <ul class="nav-links">
-          <li><a href="#">Explore</a></li>
+          <li><a href="kiray-index.html">Explore</a></li>
           <li><a href="#">List Property</a></li>
-          <li><a href="how-it-works.html" target="_blank">How it Works</a></li>
-          <li><a href="#">About</a></li>
+          <li><a href="how-it-works.html">How it Works</a></li>
+          <li><a href="About.html">About</a></li>
         </ul>
         <div class="nav-cta">
           <!-- Logged OUT state -->
@@ -1441,7 +1441,7 @@
             <button
               class="btn-fill"
               onclick="openModal('signup')"
-              style="margin-left: 0.75rem; margin-right: 0.75rem;"
+              style="margin-left: 0.75rem; margin-right: 0.75rem"
             >
               Sign Up
             </button>
@@ -2369,6 +2369,10 @@
         .addEventListener("click", function (e) {
           if (e.target === this) closeModal();
         });
+
+      window.gotohome = function () {
+        window.location.href = "kiray-index.html";
+      };
     </script>
   </body>
 </html>
