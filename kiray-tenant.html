@@ -1,0 +1,1775 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tenant Dashboard — Kiray</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --primary: #1a3c5e;
+        --accent: #e8834a;
+        --accent2: #f0b97d;
+        --light: #f7f4ef;
+        --white: #ffffff;
+        --text: #1c1c1c;
+        --muted: #6b7280;
+        --radius: 16px;
+        --shadow: 0 4px 32px rgba(26, 60, 94, 0.1);
+        --sidebar: 240px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--light);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar);
+        flex-shrink: 0;
+        background: var(--primary);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 70;
+        overflow-y: auto;
+      }
+      .sidebar-logo {
+        padding: 1.6rem 1.5rem 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -0.5px;
+      }
+      .sidebar-logo span {
+        color: var(--accent);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #fff;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .user-info .user-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+      }
+      .user-info .user-role {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.45);
+        margin-top: 1px;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 1rem 0;
+      }
+      .nav-section-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        padding: 0.75rem 1.5rem 0.3rem;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.55);
+        cursor: pointer;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+        text-decoration: none;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+      .nav-item.active {
+        background: rgba(232, 131, 74, 0.15);
+        color: #fff;
+        border-left-color: var(--accent);
+      }
+      .nav-item .nav-icon {
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .nav-badge {
+        margin-left: auto;
+        background: var(--accent);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 50px;
+      }
+      .sidebar-bottom {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .btn-logout {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.55);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-logout:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: var(--sidebar);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* TOPBAR */
+      .topbar {
+        background: #fff;
+        border-bottom: 1px solid rgba(26, 60, 94, 0.08);
+        padding: 0 2rem;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
+      .topbar-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--primary);
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .topbar-search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--light);
+        border: 1px solid rgba(26, 60, 94, 0.1);
+        border-radius: 10px;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .btn-primary-sm {
+        padding: 0.5rem 1.1rem;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-primary-sm:hover {
+        background: #d4713a;
+      }
+
+      /* CONTENT */
+      .content {
+        padding: 2rem;
+        flex: 1;
+      }
+
+      /* PAGES */
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+
+      /* STATS ROW */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .stat-card {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 1.2rem 1.4rem;
+        border: 1px solid rgba(26, 60, 94, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .stat-card .s-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.3px;
+      }
+      .stat-card .s-val {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--primary);
+      }
+      .stat-card .s-sub {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      .stat-card .s-sub.green {
+        color: #27ae60;
+      }
+      .stat-card .s-sub.orange {
+        color: var(--accent);
+      }
+
+      /* SECTION HEADER */
+      .sec-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+      .sec-head h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: var(--primary);
+      }
+      .see-all {
+        background: none;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.83rem;
+        color: var(--accent);
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+      }
+      .see-all:hover {
+        text-decoration: underline;
+      }
+
+      /* PROPERTY CARDS GRID */
+      .prop-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .prop-card {
+        background: #fff;
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid rgba(26, 60, 94, 0.07);
+        transition: all 0.2s;
+      }
+      .prop-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+      .prop-img {
+        height: 150px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1a3c5e, #2d6a9f);
+      }
+      .prop-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .prop-tag {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 50px;
+      }
+      .prop-heart {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .prop-heart:hover {
+        background: #fff;
+        transform: scale(1.1);
+      }
+      .prop-body {
+        padding: 1rem;
+      }
+      .prop-type {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+      }
+      .prop-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 2px;
+      }
+      .prop-loc {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 0.75rem;
+      }
+      .prop-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .prop-price {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: var(--primary);
+      }
+      .prop-price small {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .btn-view {
+        padding: 0.35rem 0.85rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-view:hover {
+        background: #12294a;
+      }
+
+      /* HISTORY LIST */
+      .hist-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 2rem;
+      }
+      .hist-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.9rem 1rem;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid rgba(26, 60, 94, 0.06);
+      }
+      .hist-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: #e8f4fd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .hist-info {
+        flex: 1;
+      }
+      .hist-title {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .hist-meta {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .hist-action {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--accent);
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        white-space: nowrap;
+      }
+      .hist-action:hover {
+        text-decoration: underline;
+      }
+
+      /* ALERT LIST */
+      .alert-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .alert-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid rgba(26, 60, 94, 0.06);
+        border-left: 3px solid var(--accent);
+      }
+      .alert-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      .alert-body .alert-title {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .alert-body .alert-meta {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* CHAT LIST */
+      .chat-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .chat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid rgba(26, 60, 94, 0.06);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .chat-item:hover {
+        border-color: var(--accent);
+        box-shadow: 0 2px 12px rgba(232, 131, 74, 0.1);
+      }
+      .chat-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+      .chat-info {
+        flex: 1;
+      }
+      .chat-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .chat-preview {
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .chat-time {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+      .chat-unread {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        font-size: 0.62rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* PROFILE FORM */
+      .profile-card {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 2rem;
+        border: 1px solid rgba(26, 60, 94, 0.06);
+        max-width: 520px;
+      }
+      .profile-avatar-row {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--light);
+      }
+      .profile-big-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 26px;
+        color: #fff;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .profile-big-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .verified-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #27ae60;
+        background: #e8f5e9;
+        padding: 3px 10px;
+        border-radius: 50px;
+        margin-top: 4px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .form-field label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 0.35rem;
+      }
+      .form-field input,
+      .form-field select {
+        width: 100%;
+        padding: 0.7rem 0.9rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: #fafafa;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .form-field input:focus,
+      .form-field select:focus {
+        border-color: var(--accent);
+        background: #fff;
+      }
+      .btn-save {
+        padding: 0.75rem 2rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 0.5rem;
+      }
+      .btn-save:hover {
+        background: var(--accent);
+      }
+
+      /* SEARCH PAGE */
+      .search-bar-big {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        border: 1px solid rgba(26, 60, 94, 0.07);
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .search-field {
+        flex: 1;
+        min-width: 140px;
+      }
+      .search-field label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 0.3rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .search-field select,
+      .search-field input {
+        width: 100%;
+        padding: 0.65rem 0.9rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        color: var(--text);
+        background: #fafafa;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .search-field select:focus,
+      .search-field input:focus {
+        border-color: var(--accent);
+      }
+
+      /* LOADING SCREEN */
+      .loading-screen {
+        position: fixed;
+        inset: 0;
+        background: var(--primary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        transition: opacity 0.4s;
+      }
+      .loading-screen.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .loading-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #fff;
+        margin-bottom: 1rem;
+      }
+      .loading-logo span {
+        color: var(--accent);
+      }
+      .loading-bar {
+        width: 200px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .loading-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        animation: loadFill 1.2s ease forwards;
+      }
+      @keyframes loadFill {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .page.active .stats-row {
+        animation: fadeUp 0.4s ease both;
+      }
+
+      /* Responsiveness */
+      /* ───────────────── MOBILE RESPONSIVE ───────────────── */
+
+      .menu-toggle {
+        display: none;
+        width: 42px;
+        height: 42px;
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 40;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* TABLET */
+      @media (max-width: 1024px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* MOBILE */
+      @media (max-width: 768px) {
+        body {
+          display: block;
+        }
+
+        .menu-toggle {
+          display: flex;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          transition: 0.3s ease;
+          width: 270px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .topbar {
+          padding: 0 1rem;
+          gap: 1rem;
+        }
+
+        .topbar-title {
+          font-size: 1rem;
+        }
+
+        .topbar-right {
+          gap: 0.5rem;
+        }
+
+        .topbar-search {
+          display: none;
+        }
+
+        .btn-primary-sm {
+          padding: 0.45rem 0.8rem;
+          font-size: 0.75rem;
+        }
+
+        .content {
+          padding: 1rem;
+        }
+
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+
+        .prop-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .search-bar-big {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-field {
+          width: 100%;
+        }
+
+        .profile-card {
+          padding: 1.2rem;
+        }
+
+        .profile-avatar-row {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .chat-item,
+        .hist-item,
+        .alert-item {
+          padding: 0.8rem;
+        }
+
+        .sec-head {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.7rem;
+        }
+      }
+
+      /* SMALL MOBILE */
+      @media (max-width: 480px) {
+        .topbar {
+          height: auto;
+          padding: 0.8rem 1rem;
+        }
+
+        .topbar-right {
+          width: 100%;
+          justify-content: flex-end;
+        }
+
+        .prop-img {
+          height: 180px;
+        }
+
+        .stat-card .s-val {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- LOADING -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-logo">Kiray</div>
+      <div class="loading-bar"><div class="loading-fill"></div></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">Kiray</div>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar"></div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarName">Loading...</div>
+          <div class="user-role">🔍 Tenant</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a class="nav-item active" onclick="showPage('overview', this)"
+          ><span class="nav-icon">⊞</span>Overview</a
+        >
+        <a class="nav-item" onclick="showPage('search', this)"
+          ><span class="nav-icon">🔍</span>Search Properties</a
+        >
+        <a class="nav-item" onclick="showPage('saved', this)"
+          ><span class="nav-icon">♥</span>Saved Listings<span class="nav-badge"
+            >12</span
+          ></a
+        >
+        <div class="nav-section-label">Activity</div>
+        <a class="nav-item" onclick="showPage('history', this)"
+          ><span class="nav-icon">◷</span>Search History</a
+        >
+        <a class="nav-item" onclick="showPage('chats', this)"
+          ><span class="nav-icon">💬</span>My Chats<span class="nav-badge"
+            >2</span
+          ></a
+        >
+        <a class="nav-item" onclick="showPage('alerts', this)"
+          ><span class="nav-icon">🔔</span>Alerts</a
+        >
+        <div class="nav-section-label">Account</div>
+        <a class="nav-item" onclick="showPage('profile', this)"
+          ><span class="nav-icon">◎</span>My Profile</a
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="btn-logout" onclick="handleLogout()">
+          ↩ &nbsp;Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title" id="topbarTitle">Overview</div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="topbar-search">🔍 &nbsp;Search properties...</div>
+          <button class="btn-primary-sm" onclick="showPage('search', null)">
+            + New Search
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- OVERVIEW PAGE -->
+        <div class="page active" id="page-overview">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="s-label">Saved Listings</div>
+              <div class="s-val">12</div>
+              <div class="s-sub green">3 new this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="s-label">Searches Done</div>
+              <div class="s-val">47</div>
+              <div class="s-sub">Last 30 days</div>
+            </div>
+            <div class="stat-card">
+              <div class="s-label">Owner Chats</div>
+              <div class="s-val">6</div>
+              <div class="s-sub orange">2 unread</div>
+            </div>
+            <div class="stat-card">
+              <div class="s-label">Active Alerts</div>
+              <div class="s-val">3</div>
+              <div class="s-sub">Matching your criteria</div>
+            </div>
+          </div>
+
+          <div class="sec-head">
+            <h3>Recently Saved</h3>
+            <button class="see-all" onclick="showPage('saved', null)">
+              See all →
+            </button>
+          </div>
+          <div class="prop-grid">
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=70"
+                />
+                <div class="prop-tag">Verified</div>
+                <button class="prop-heart">♥</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">2BHK Flat</div>
+                <div class="prop-title">Modern Flat near Metro</div>
+                <div class="prop-loc">📍 Koramangala, Bengaluru</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹22,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&q=70"
+                />
+                <div class="prop-tag">New</div>
+                <button class="prop-heart">♡</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">PG Hostel</div>
+                <div class="prop-title">Girls PG with AC Rooms</div>
+                <div class="prop-loc">📍 HSR Layout, Bengaluru</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹8,500<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&q=70"
+                />
+                <div class="prop-tag">Popular</div>
+                <button class="prop-heart">♥</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">Villa</div>
+                <div class="prop-title">Spacious Villa with Garden</div>
+                <div class="prop-loc">📍 Whitefield, Bengaluru</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹45,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec-head">
+            <h3>Recent Searches</h3>
+            <button class="see-all" onclick="showPage('history', null)">
+              See all →
+            </button>
+          </div>
+          <div class="hist-list">
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">
+                  2BHK flat in Koramangala under ₹25,000
+                </div>
+                <div class="hist-meta">Today · 14 results found</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">PG near Indiranagar metro</div>
+                <div class="hist-meta">Yesterday · 8 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">
+                  1BHK furnished flat HSR Layout ₹12K–18K
+                </div>
+                <div class="hist-meta">3 days ago · 22 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH PAGE -->
+        <div class="page" id="page-search">
+          <div class="search-bar-big">
+            <div class="search-field">
+              <label>City</label
+              ><select>
+                <option>Bengaluru</option>
+                <option>Mumbai</option>
+                <option>Delhi</option>
+                <option>Pune</option>
+                <option>Hyderabad</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label>Type</label
+              ><select>
+                <option>All Types</option>
+                <option>Flat / Apartment</option>
+                <option>House / Villa</option>
+                <option>PG / Hostel</option>
+                <option>Shop / Office</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label>Budget</label
+              ><select>
+                <option>Any Budget</option>
+                <option>Under ₹10,000</option>
+                <option>₹10K–₹25K</option>
+                <option>₹25K–₹50K</option>
+                <option>₹50K+</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label>Locality</label
+              ><input type="text" placeholder="e.g. Koramangala..." />
+            </div>
+            <button class="btn-primary-sm" style="padding: 0.65rem 1.5rem">
+              Search
+            </button>
+          </div>
+          <div class="sec-head"><h3>All Listings</h3></div>
+          <div class="prop-grid">
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=70"
+                />
+                <div class="prop-tag">Verified</div>
+                <button class="prop-heart">♡</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">2BHK Flat</div>
+                <div class="prop-title">Modern Flat near Metro</div>
+                <div class="prop-loc">📍 Koramangala</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹22,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&q=70"
+                />
+                <div class="prop-tag">New</div>
+                <button class="prop-heart">♡</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">PG Hostel</div>
+                <div class="prop-title">Girls PG with AC</div>
+                <div class="prop-loc">📍 HSR Layout</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹8,500<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=70"
+                />
+                <div class="prop-tag">Verified</div>
+                <button class="prop-heart">♡</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">1BHK Flat</div>
+                <div class="prop-title">Cozy Studio near Park</div>
+                <div class="prop-loc">📍 Indiranagar</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹15,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&q=70"
+                />
+                <div class="prop-tag">Popular</div>
+                <button class="prop-heart">♡</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">Villa</div>
+                <div class="prop-title">Spacious Villa</div>
+                <div class="prop-loc">📍 Whitefield</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹45,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAVED PAGE -->
+        <div class="page" id="page-saved">
+          <div class="sec-head">
+            <h3>Saved Listings (12)</h3>
+            <button class="btn-primary-sm">Sort: Newest</button>
+          </div>
+          <div class="prop-grid">
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=70"
+                />
+                <div class="prop-tag">Verified</div>
+                <button class="prop-heart">♥</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">2BHK Flat</div>
+                <div class="prop-title">Modern Flat near Metro</div>
+                <div class="prop-loc">📍 Koramangala</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹22,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&q=70"
+                />
+                <div class="prop-tag">New</div>
+                <button class="prop-heart">♥</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">PG Hostel</div>
+                <div class="prop-title">Girls PG with AC</div>
+                <div class="prop-loc">📍 HSR Layout</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹8,500<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&q=70"
+                />
+                <div class="prop-tag">Popular</div>
+                <button class="prop-heart">♥</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">Villa</div>
+                <div class="prop-title">Spacious Villa</div>
+                <div class="prop-loc">📍 Whitefield</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹45,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-img">
+                <img
+                  src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=70"
+                />
+                <div class="prop-tag">Verified</div>
+                <button class="prop-heart">♥</button>
+              </div>
+              <div class="prop-body">
+                <div class="prop-type">1BHK Flat</div>
+                <div class="prop-title">Cozy Studio near Park</div>
+                <div class="prop-loc">📍 Indiranagar</div>
+                <div class="prop-footer">
+                  <div class="prop-price">₹15,000<small>/mo</small></div>
+                  <button class="btn-view">View</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HISTORY PAGE -->
+        <div class="page" id="page-history">
+          <div class="sec-head">
+            <h3>Search History (47)</h3>
+            <button
+              class="btn-primary-sm"
+              style="background: #e5e7eb; color: var(--muted)"
+            >
+              Clear All
+            </button>
+          </div>
+          <div class="hist-list">
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">
+                  2BHK flat in Koramangala under ₹25,000
+                </div>
+                <div class="hist-meta">Today, 2:14 PM · 14 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">
+                  PG near Indiranagar metro, girls only
+                </div>
+                <div class="hist-meta">Yesterday, 6:30 PM · 8 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">
+                  1BHK HSR Layout ₹12K–₹18K furnished
+                </div>
+                <div class="hist-meta">3 days ago · 22 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">
+                  Furnished flat Bangalore near tech park
+                </div>
+                <div class="hist-meta">5 days ago · 31 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+            <div class="hist-item">
+              <div class="hist-icon">🔍</div>
+              <div class="hist-info">
+                <div class="hist-title">Shop for rent MG Road commercial</div>
+                <div class="hist-meta">1 week ago · 7 results</div>
+              </div>
+              <button class="hist-action">Search again</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHATS PAGE -->
+        <div class="page" id="page-chats">
+          <div class="sec-head"><h3>My Chats</h3></div>
+          <div class="chat-list">
+            <div class="chat-item">
+              <div class="chat-avatar">MK</div>
+              <div class="chat-info">
+                <div class="chat-name">
+                  Mahesh Kumar
+                  <span
+                    style="
+                      font-size: 0.7rem;
+                      color: var(--muted);
+                      font-weight: 400;
+                    "
+                    >· Modern Flat, Koramangala</span
+                  >
+                </div>
+                <div class="chat-preview">
+                  Is the flat available from June 1st?
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                  gap: 4px;
+                "
+              >
+                <div class="chat-time">2h ago</div>
+                <div class="chat-unread">2</div>
+              </div>
+            </div>
+            <div class="chat-item">
+              <div class="chat-avatar">RS</div>
+              <div class="chat-info">
+                <div class="chat-name">
+                  Rahul Sharma
+                  <span
+                    style="
+                      font-size: 0.7rem;
+                      color: var(--muted);
+                      font-weight: 400;
+                    "
+                    >· PG HSR Layout</span
+                  >
+                </div>
+                <div class="chat-preview">
+                  Yes, visit confirmed for Saturday 11am
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                  gap: 4px;
+                "
+              >
+                <div class="chat-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="chat-item">
+              <div class="chat-avatar">AP</div>
+              <div class="chat-info">
+                <div class="chat-name">
+                  Asha Pillai
+                  <span
+                    style="
+                      font-size: 0.7rem;
+                      color: var(--muted);
+                      font-weight: 400;
+                    "
+                    >· Villa, Whitefield</span
+                  >
+                </div>
+                <div class="chat-preview">
+                  Security deposit is 2 months rent
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                  gap: 4px;
+                "
+              >
+                <div class="chat-time">3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERTS PAGE -->
+        <div class="page" id="page-alerts">
+          <div class="sec-head">
+            <h3>Rental Alerts (3 active)</h3>
+            <button class="btn-primary-sm">+ Add Alert</button>
+          </div>
+          <div class="alert-list">
+            <div class="alert-item">
+              <div class="alert-dot"></div>
+              <div class="alert-body">
+                <div class="alert-title">
+                  New 2BHK flats in Koramangala under ₹25,000
+                </div>
+                <div class="alert-meta">
+                  3 new listings found today · Notify: Daily
+                </div>
+              </div>
+            </div>
+            <div class="alert-item" style="border-left-color: var(--primary)">
+              <div class="alert-dot" style="background: var(--primary)"></div>
+              <div class="alert-body">
+                <div class="alert-title">
+                  Girls PG in HSR Layout under ₹10,000
+                </div>
+                <div class="alert-meta">
+                  1 new listing found · Notify: Instantly
+                </div>
+              </div>
+            </div>
+            <div class="alert-item" style="border-left-color: #27ae60">
+              <div class="alert-dot" style="background: #27ae60"></div>
+              <div class="alert-body">
+                <div class="alert-title">
+                  1BHK furnished flat near Indiranagar
+                </div>
+                <div class="alert-meta">No new listings · Notify: Weekly</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div class="page" id="page-profile">
+          <div class="profile-card">
+            <div class="profile-avatar-row">
+              <div class="profile-big-avatar" id="profileBigAvatar"></div>
+              <div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: var(--primary);
+                  "
+                  id="profileName"
+                >
+                  —
+                </div>
+                <div
+                  style="font-size: 0.85rem; color: var(--muted)"
+                  id="profileEmail"
+                >
+                  —
+                </div>
+                <div class="verified-badge">✓ Verified Tenant</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Full Name</label
+                ><input type="text" id="pName" placeholder="Your name" />
+              </div>
+              <div class="form-field">
+                <label>Phone</label
+                ><input type="tel" id="pPhone" placeholder="+91 98765 43210" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>City</label
+                ><select>
+                  <option>Bengaluru</option>
+                  <option>Mumbai</option>
+                  <option>Delhi</option>
+                  <option>Pune</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Budget Range</label
+                ><select>
+                  <option>₹10K–₹25K/mo</option>
+                  <option>Under ₹10K</option>
+                  <option>₹25K–₹50K</option>
+                  <option>₹50K+</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-field" style="margin-bottom: 1rem">
+              <label>Email</label
+              ><input
+                type="email"
+                id="pEmail"
+                placeholder="you@email.com"
+                readonly
+                style="background: #f3f4f6"
+              />
+            </div>
+            <button class="btn-save">Save Changes</button>
+          </div>
+        </div>
+      </div>
+      <!-- /content -->
+    </div>
+    <!-- /main -->
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCntS97Kn555GLas3ZGSMyH4zfjaesxVrg",
+        authDomain: "kiray-4b39a.firebaseapp.com",
+        projectId: "kiray-4b39a",
+        storageBucket: "kiray-4b39a.firebasestorage.app",
+        messagingSenderId: "843443423294",
+        appId: "1:843443423294:web:bd56c542a25ec095fa696f",
+      };
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // ── Auth Guard ──
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          window.location.href = "kiray-index.html";
+          return;
+        }
+        // Check role — if owner, redirect to owner page
+        try {
+          const snap = await getDoc(doc(db, "users", user.uid));
+          const data = snap.data() || {};
+          if (data.role === "owner") {
+            window.location.href = "kiray-owner.html";
+            return;
+          }
+          // Populate UI
+          populateUser(user, data);
+        } catch {
+          populateUser(user, {});
+        }
+        // Hide loader
+        // Hide loader after max 2 seconds (even if auth is slow)
+        const hideLoader = () => {
+          document.getElementById("loadingScreen").classList.add("hide");
+        };
+
+        // fallback timeout
+        const loaderTimeout = setTimeout(hideLoader, 2000);
+
+        // also hide immediately after auth completes
+        onAuthStateChanged(auth, async (user) => {
+          clearTimeout(loaderTimeout); // stop fallback timer
+
+          if (!user) {
+            window.location.href = "kiray-index.html";
+            return;
+          }
+
+          try {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            const data = snap.data() || {};
+
+            if (data.role === "owner") {
+              window.location.href = "kiray-owner.html";
+              return;
+            }
+
+            populateUser(user, data);
+          } catch {
+            populateUser(user, {});
+          }
+
+          hideLoader(); // hide immediately after auth + data
+        });
+      });
+
+      function populateUser(user, data) {
+        const name =
+          data.name ||
+          user.displayName ||
+          user.email?.split("@")[0] ||
+          "Tenant";
+        const email = user.email || user.phoneNumber || "";
+        const photo = user.photoURL || "";
+        const initials = name.charAt(0).toUpperCase();
+
+        // Sidebar avatar
+        const sa = document.getElementById("sidebarAvatar");
+        sa.innerHTML = photo ? `<img src="${photo}" alt="avatar"/>` : initials;
+
+        document.getElementById("sidebarName").textContent = name;
+        document.getElementById("profileName").textContent = name;
+        document.getElementById("profileEmail").textContent = email;
+        document.getElementById("pName").value = name;
+        document.getElementById("pEmail").value = email;
+
+        const ba = document.getElementById("profileBigAvatar");
+        ba.innerHTML = photo ? `<img src="${photo}" alt="avatar"/>` : initials;
+      }
+
+      window.handleLogout = async function () {
+        await signOut(auth);
+        window.location.href = "kiray-index.html";
+      };
+
+      // MOBILE SIDEBAR
+      const sidebar = document.querySelector(".sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+
+      window.toggleSidebar = function () {
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+      };
+
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+      });
+
+      // CLOSE SIDEBAR AFTER CLICKING MENU ITEM IN MOBILE
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+          }
+        });
+      });
+    </script>
+
+    <script>
+      // Page navigation
+      const pageTitles = {
+        overview: "Overview",
+        search: "Search Properties",
+        saved: "Saved Listings",
+        history: "Search History",
+        chats: "My Chats",
+        alerts: "Alerts",
+        profile: "My Profile",
+      };
+      function showPage(id, el) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page-" + id)?.classList.add("active");
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((i) => i.classList.remove("active"));
+        if (el) el.classList.add("active");
+        document.getElementById("topbarTitle").textContent =
+          pageTitles[id] || id;
+      }
+      window.showPage = showPage;
+    </script>
+  </body>
+</html>
