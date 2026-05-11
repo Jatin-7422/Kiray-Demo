@@ -1,0 +1,2758 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kiray — India's Smartest Rental Platform</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --primary: #1a3c5e;
+        --accent: #e8834a;
+        --accent2: #f0b97d;
+        --light: #f7f4ef;
+        --white: #ffffff;
+        --text: #1c1c1c;
+        --muted: #6b7280;
+        --card: #ffffff;
+        --radius: 16px;
+        --shadow: 0 4px 32px rgba(26, 60, 94, 0.1);
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--light);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(247, 244, 239, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(26, 60, 94, 0.08);
+        padding: 0 5%;
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: var(--primary);
+        letter-spacing: -1px;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--primary);
+      }
+      .nav-cta {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      .btn-outline {
+        padding: 0.5rem 1.25rem;
+        border: 1.5px solid var(--primary);
+        border-radius: 50px;
+        background: transparent;
+        color: var(--primary);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-outline:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-fill {
+        padding: 0.5rem 1.25rem;
+        border: 1.5px solid var(--accent);
+        border-radius: 50px;
+        background: var(--accent);
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-fill:hover {
+        background: #d4713a;
+      }
+
+      /* NAV USER STATE */
+      #navUserArea {
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .nav-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .nav-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .nav-username {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--primary);
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .nav-role-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 50px;
+      }
+      .nav-role-badge.tenant {
+        background: #e8f0fa;
+        color: var(--primary);
+      }
+      .nav-role-badge.owner {
+        background: #e8f3ee;
+        color: #3d6b5a;
+      }
+      .btn-logout {
+        padding: 0.4rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 50px;
+        background: transparent;
+        color: var(--muted);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-logout:hover {
+        border-color: #c0392b;
+        color: #c0392b;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 100px 5% 60px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 55%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a3c5e 0%, #2d6a9f 100%);
+        border-radius: 0 0 0 80px;
+        z-index: 0;
+      }
+      .hero-img-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 55%;
+        height: 100%;
+        background: url("https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=900&q=80")
+          center/cover;
+        border-radius: 0 0 0 80px;
+        opacity: 0.18;
+        z-index: 1;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 560px;
+      }
+      .hero-badge {
+        display: inline-block;
+        background: #e8f4fd;
+        color: var(--primary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+      }
+      .hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.4rem, 5vw, 3.8rem);
+        font-weight: 900;
+        line-height: 1.1;
+        color: var(--primary);
+        margin-bottom: 1.2rem;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        max-width: 440px;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn-hero-primary {
+        padding: 0.9rem 2rem;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 16px rgba(232, 131, 74, 0.3);
+      }
+      .btn-hero-primary:hover {
+        background: #d4713a;
+        transform: translateY(-2px);
+      }
+      .btn-hero-secondary {
+        padding: 0.9rem 2rem;
+        background: #fff;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        border-radius: 50px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-hero-secondary:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+      .hero-stats {
+        display: flex;
+        gap: 2.5rem;
+        margin-top: 3rem;
+      }
+      .stat-item {
+        text-align: left;
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--primary);
+      }
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      /* SEARCH BAR */
+      .search-section {
+        padding: 0 5%;
+        margin-top: -30px;
+        position: relative;
+        z-index: 10;
+      }
+      .search-box {
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.5rem 2rem;
+        box-shadow: var(--shadow);
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+      .search-field {
+        flex: 1;
+        min-width: 150px;
+      }
+      .search-field label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .search-field select,
+      .search-field input {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.95rem;
+        color: var(--text);
+        background: #f9fafb;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .search-field select:focus,
+      .search-field input:focus {
+        border-color: var(--accent);
+      }
+      .btn-search {
+        padding: 0.75rem 2rem;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+      }
+      .btn-search:hover {
+        background: #d4713a;
+      }
+
+      /* HOW IT WORKS */
+      .section {
+        padding: 80px 5%;
+      }
+      .section-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        font-weight: 900;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+      .section-sub {
+        font-size: 1rem;
+        color: var(--muted);
+        max-width: 480px;
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+      .step-card {
+        background: #fff;
+        border-radius: var(--radius);
+        padding: 2rem 1.5rem;
+        border: 1px solid #f0ece5;
+        transition: all 0.25s;
+        cursor: default;
+      }
+      .step-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow);
+      }
+      .step-num {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1a3c5e, #2d6a9f);
+        color: #fff;
+        font-family: "Playfair Display", serif;
+        font-size: 1.3rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.2rem;
+      }
+      .step-card h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+      .step-card p {
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* WHY US */
+      .why-section {
+        padding: 80px 5%;
+        background: linear-gradient(135deg, #1a3c5e 0%, #0f2540 100%);
+        color: #fff;
+      }
+      .why-section .section-label {
+        color: var(--accent2);
+      }
+      .why-section .section-title {
+        color: #fff;
+      }
+      .why-section .section-sub {
+        color: rgba(255, 255, 255, 0.65);
+      }
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
+      .why-card {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--radius);
+        padding: 1.8rem 1.4rem;
+        transition: all 0.25s;
+      }
+      .why-card:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-3px);
+      }
+      .why-icon {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+      }
+      .why-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .why-card p {
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.6;
+      }
+
+      /* CTA */
+      .cta-section {
+        padding: 80px 5%;
+        background: #fff;
+        text-align: center;
+      }
+      .cta-box {
+        background: linear-gradient(135deg, #1a3c5e 0%, #2d6a9f 100%);
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-box::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 250px;
+        height: 250px;
+        background: rgba(232, 131, 74, 0.15);
+        border-radius: 50%;
+      }
+      .cta-box h2 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        font-weight: 900;
+        margin-bottom: 1rem;
+      }
+      .cta-box p {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 2rem;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .cta-btns {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-cta-white {
+        padding: 0.85rem 2rem;
+        background: #fff;
+        color: var(--primary);
+        border: none;
+        border-radius: 50px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-cta-white:hover {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-cta-outline {
+        padding: 0.85rem 2rem;
+        background: transparent;
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-cta-outline:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      /* FOOTER */
+      footer {
+        background: #0f2540;
+        color: rgba(255, 255, 255, 0.6);
+        padding: 40px 5%;
+        text-align: center;
+      }
+      footer .logo {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+      }
+      footer p {
+        font-size: 0.85rem;
+      }
+
+      /* ═══════════════════════════════════════════
+         MODAL — FULL REDESIGN WITH FIREBASE STEPS
+         ═══════════════════════════════════════════ */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 37, 64, 0.65);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 460px;
+        position: relative;
+        box-shadow: 0 24px 80px rgba(26, 60, 94, 0.25);
+        animation: slideUp 0.3s ease;
+        overflow: hidden;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Modal top accent bar */
+      .modal-accent-bar {
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        width: 100%;
+      }
+
+      .modal-body {
+        padding: 2rem 2rem 2.5rem;
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: #f3f4f6;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 1rem;
+        color: var(--muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        z-index: 1;
+      }
+      .modal-close:hover {
+        background: #e5e7eb;
+        color: var(--text);
+      }
+
+      .modal-header {
+        margin-bottom: 1.5rem;
+      }
+      .modal-eyebrow {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+      }
+      .modal h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.7rem;
+        font-weight: 900;
+        color: var(--primary);
+        line-height: 1.1;
+      }
+      .modal .subtitle {
+        font-size: 0.88rem;
+        color: var(--muted);
+        margin-top: 0.3rem;
+      }
+
+      /* ROLE TOGGLE */
+      .role-toggle {
+        display: flex;
+        background: #f3f4f6;
+        border-radius: 12px;
+        padding: 4px;
+        margin-bottom: 1.5rem;
+        gap: 4px;
+      }
+      .role-btn {
+        flex: 1;
+        padding: 0.65rem;
+        border: none;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s;
+        background: transparent;
+        color: var(--muted);
+      }
+      .role-btn.active {
+        background: #fff;
+        color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      /* AUTH METHOD BUTTONS */
+      .auth-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        margin-bottom: 1.2rem;
+      }
+      .btn-google {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.93rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1.5px solid #e5e7eb;
+        background: #fff;
+        color: var(--text);
+        width: 100%;
+      }
+      .btn-google:hover {
+        border-color: #4285f4;
+        background: #f0f5ff;
+      }
+      .btn-phone-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.93rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1.5px solid #e5e7eb;
+        background: #fff;
+        color: var(--text);
+        width: 100%;
+      }
+      .btn-phone-toggle:hover {
+        border-color: var(--accent);
+        background: #fff8f4;
+      }
+
+      /* DIVIDER */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 1rem 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+      }
+
+      /* FORM */
+      .form-field {
+        margin-bottom: 0.9rem;
+      }
+      .form-field label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 0.35rem;
+      }
+      .form-field input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.93rem;
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s;
+        background: #fafafa;
+      }
+      .form-field input:focus {
+        border-color: var(--accent);
+        background: #fff;
+      }
+      .form-field input.error {
+        border-color: #e74c3c;
+      }
+
+      /* OTP BOXES */
+      .otp-row {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 1rem 0;
+      }
+      .otp-box {
+        width: 46px;
+        height: 52px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: "Playfair Display", serif;
+        color: var(--primary);
+        outline: none;
+        transition: border 0.2s;
+      }
+      .otp-box:focus {
+        border-color: var(--accent);
+      }
+
+      /* SUBMIT BUTTON */
+      .btn-modal-submit {
+        width: 100%;
+        padding: 0.9rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .btn-modal-submit:hover {
+        background: var(--accent);
+        transform: translateY(-1px);
+      }
+      .btn-modal-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* BACK BUTTON */
+      .btn-back {
+        background: none;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: color 0.2s;
+      }
+      .btn-back:hover {
+        color: var(--primary);
+      }
+
+      /* STATUS MESSAGES */
+      .auth-msg {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        display: none;
+      }
+      .auth-msg.error {
+        background: #fdf0ef;
+        color: #c0392b;
+        border: 1px solid #f5c6c2;
+        display: block;
+      }
+      .auth-msg.success {
+        background: #edf7f1;
+        color: #1e8449;
+        border: 1px solid #a9dfbf;
+        display: block;
+      }
+      .auth-msg.info {
+        background: #e8f4fd;
+        color: #1a3c5e;
+        border: 1px solid #b8d9f5;
+        display: block;
+      }
+
+      /* SPINNER */
+      .spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* MODAL FOOTER */
+      .modal-footer {
+        text-align: center;
+        margin-top: 1.2rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .modal-footer a {
+        color: var(--primary);
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .modal-footer a:hover {
+        color: var(--accent);
+      }
+
+      /* SUCCESS STATE */
+      .auth-success-state {
+        text-align: center;
+        padding: 1rem 0 0.5rem;
+        display: none;
+      }
+      .success-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .auth-success-state h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: var(--primary);
+        margin-bottom: 0.4rem;
+      }
+      .auth-success-state p {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      /* SECTIONS */
+      .auth-section {
+        display: none;
+      }
+      .auth-section.active {
+        display: block;
+      }
+
+      /* RECAPTCHA */
+      #recaptcha-container {
+        margin: 0.5rem 0;
+      }
+
+      /* RESEND */
+      .resend-row {
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-top: 0.75rem;
+      }
+      .resend-row button {
+        background: none;
+        border: none;
+        color: var(--accent);
+        font-weight: 600;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.82rem;
+        padding: 0;
+      }
+      .resend-row button:disabled {
+        color: var(--muted);
+        cursor: not-allowed;
+      }
+
+      /* HERO ANIMATIONS */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .hero-content {
+        animation: fadeUp 0.7s ease both;
+      }
+      .hero-badge {
+        animation: fadeUp 0.5s 0.1s ease both;
+      }
+      .hero h1 {
+        animation: fadeUp 0.5s 0.2s ease both;
+      }
+      .hero p {
+        animation: fadeUp 0.5s 0.3s ease both;
+      }
+      .hero-actions {
+        animation: fadeUp 0.5s 0.4s ease both;
+      }
+      .hero-stats {
+        animation: fadeUp 0.5s 0.5s ease both;
+      }
+      /* ════════════════════════════════════════
+   MOBILE RESPONSIVE DESIGN
+   ADD THIS AT THE VERY END OF YOUR CSS
+   ════════════════════════════════════════ */
+
+      /* TABLET */
+      @media (max-width: 1024px) {
+        .hero {
+          flex-direction: column;
+          justify-content: center;
+          padding-top: 120px;
+          padding-bottom: 80px;
+          min-height: auto;
+        }
+
+        .hero-bg,
+        .hero-img-overlay {
+          width: 100%;
+          height: 45%;
+          border-radius: 0 0 40px 40px;
+        }
+
+        .hero-content {
+          max-width: 100%;
+          text-align: center;
+          margin-top: 220px;
+        }
+
+        .hero p {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .hero-actions {
+          justify-content: center;
+        }
+
+        .hero-stats {
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .search-box {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-field {
+          width: 100%;
+        }
+
+        .btn-search {
+          width: 100%;
+        }
+      }
+
+      /* MOBILE */
+      @media (max-width: 768px) {
+        nav {
+          padding: 0 1rem;
+        }
+
+        .nav-inner {
+          height: auto;
+          min-height: 64px;
+          padding: 0.7rem 0;
+          flex-wrap: wrap;
+          gap: 0.8rem;
+        }
+
+        .logo {
+          font-size: 1.4rem;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .nav-links a {
+          font-size: 0.85rem;
+        }
+
+        .nav-cta {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        #navUserArea {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        /* HERO */
+        .hero {
+          padding: 140px 1.2rem 60px;
+        }
+
+        .hero-bg,
+        .hero-img-overlay {
+          height: 38%;
+          border-radius: 0 0 28px 28px;
+        }
+
+        .hero-content {
+          margin-top: 160px;
+        }
+
+        .hero h1 {
+          font-size: 2.3rem;
+          line-height: 1.15;
+        }
+
+        .hero p {
+          font-size: 0.98rem;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .btn-hero-primary,
+        .btn-hero-secondary {
+          width: 100%;
+        }
+
+        .hero-stats {
+          gap: 1.5rem;
+          margin-top: 2rem;
+        }
+
+        .stat-item {
+          text-align: center;
+        }
+
+        .stat-num {
+          font-size: 1.5rem;
+        }
+
+        /* SEARCH */
+        .search-section {
+          padding: 0 1rem;
+          margin-top: -20px;
+        }
+
+        .search-box {
+          padding: 1.2rem;
+          border-radius: 18px;
+        }
+
+        /* GENERAL SECTIONS */
+        .section,
+        .why-section,
+        .cta-section {
+          padding: 60px 1rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .section-sub {
+          font-size: 0.95rem;
+          margin-bottom: 2rem;
+        }
+
+        .steps-grid,
+        .why-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .step-card,
+        .why-card {
+          padding: 1.5rem;
+        }
+
+        /* CTA */
+        .cta-box {
+          padding: 2.5rem 1.2rem;
+          border-radius: 20px;
+        }
+
+        .cta-btns {
+          flex-direction: column;
+        }
+
+        .btn-cta-white,
+        .btn-cta-outline {
+          width: 100%;
+        }
+
+        /* FOOTER */
+        footer {
+          padding: 30px 1rem;
+        }
+
+        /* MODAL */
+        .modal {
+          max-width: 100%;
+          border-radius: 20px;
+        }
+
+        .modal-body {
+          padding: 1.5rem 1.2rem 2rem;
+        }
+
+        .modal h2 {
+          font-size: 1.5rem;
+        }
+
+        .role-toggle {
+          flex-direction: column;
+        }
+
+        .role-btn {
+          width: 100%;
+        }
+
+        .otp-row {
+          gap: 6px;
+        }
+
+        .otp-box {
+          width: 42px;
+          height: 48px;
+          font-size: 1.1rem;
+        }
+      }
+
+      /* SMALL MOBILE */
+      @media (max-width: 480px) {
+        .hero {
+          padding-top: 150px;
+        }
+
+        .hero-content {
+          margin-top: 120px;
+        }
+
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        .hero-badge {
+          font-size: 0.72rem;
+        }
+
+        .hero p {
+          font-size: 0.92rem;
+        }
+
+        .hero-stats {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .search-box {
+          padding: 1rem;
+        }
+
+        .section-title {
+          font-size: 1.8rem;
+        }
+
+        .cta-box h2 {
+          font-size: 1.8rem;
+        }
+
+        .btn-outline,
+        .btn-fill {
+          width: 100%;
+        }
+
+        .nav-cta {
+          flex-direction: column;
+        }
+
+        .otp-box {
+          width: 38px;
+          height: 45px;
+        }
+
+        .modal-body {
+          padding: 1.2rem 1rem 1.8rem;
+        }
+      }
+
+      /* Hamburger menu  */
+
+      /* ════════════════════════════════════════
+   HAMBURGER MENU
+   ════════════════════════════════════════ */
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 42px;
+        height: 42px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        z-index: 200;
+      }
+
+      .hamburger span {
+        width: 24px;
+        height: 2.5px;
+        background: var(--primary);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+
+      /* ANIMATION */
+      .hamburger.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      /* MOBILE NAV */
+      @media (max-width: 768px) {
+        .hamburger {
+          display: flex;
+        }
+
+        .nav-inner {
+          position: relative;
+        }
+
+        .nav-links {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(14px);
+
+          flex-direction: column;
+          align-items: center;
+
+          padding: 1.2rem;
+          gap: 1rem;
+
+          border-radius: 0 0 18px 18px;
+
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(-10px);
+
+          transition: all 0.3s ease;
+        }
+
+        .nav-links.open {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0);
+        }
+
+        .nav-links li {
+          width: 100%;
+          text-align: center;
+        }
+
+        .nav-links a {
+          display: block;
+          width: 100%;
+          padding: 0.7rem;
+          border-radius: 10px;
+          transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+          background: #f3f4f6;
+        }
+
+        /* NAV CTA MOBILE */
+        .nav-cta {
+          width: auto;
+          margin-left: auto;
+        }
+
+        #navAuthButtons {
+          display: none;
+        }
+
+        #navUserArea {
+          display: none;
+        }
+      }
+
+      *{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --primary:#1a3c5e;
+  --accent:#e8834a;
+  --light:#f7f4ef;
+  --dark:#0f2540;
+  --white:#ffffff;
+  --muted:#6b7280;
+  --line:#d6d6d6;
+}
+
+body{
+  font-family:"DM Sans",sans-serif;
+  background:var(--light);
+  color:#111;
+  overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  background:rgba(247,244,239,0.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+
+.nav-inner{
+  height:70px;
+  width:min(1200px,90%);
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-family:"Playfair Display",serif;
+  font-size:1.7rem;
+  font-weight:900;
+  color:var(--primary);
+}
+
+.logo span{
+  color:var(--accent);
+}
+
+.nav-btn{
+  padding:0.7rem 1.5rem;
+  border:none;
+  border-radius:50px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav-btn:hover{
+  transform:translateY(-2px);
+}
+
+/* HERO */
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:120px 5% 80px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:600px;
+  height:600px;
+  background:rgba(232,131,74,0.12);
+  border-radius:50%;
+  top:-250px;
+  right:-150px;
+  filter:blur(40px);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:900px;
+}
+
+.hero-tag{
+  display:inline-block;
+  padding:0.45rem 1rem;
+  border-radius:50px;
+  background:#e8f0fa;
+  color:var(--primary);
+  font-size:0.8rem;
+  font-weight:700;
+  margin-bottom:1.5rem;
+}
+
+.hero h1{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(3rem,8vw,5.8rem);
+  line-height:1;
+  color:var(--primary);
+  margin-bottom:1.5rem;
+}
+
+.hero h1 span{
+  color:var(--accent);
+}
+
+.hero p{
+  max-width:700px;
+  margin:auto;
+  color:var(--muted);
+  font-size:1.1rem;
+  line-height:1.8;
+}
+
+/* TIMELINE */
+
+.timeline-section{
+  padding:80px 5% 140px;
+  position:relative;
+}
+
+.section-head{
+  text-align:center;
+  margin-bottom:5rem;
+}
+
+.section-head h2{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(2rem,5vw,3.8rem);
+  color:var(--primary);
+  margin-bottom:1rem;
+}
+
+.section-head p{
+  color:var(--muted);
+  font-size:1rem;
+}
+
+.timeline{
+  width:min(1100px,100%);
+  margin:auto;
+  position:relative;
+}
+
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+  width:4px;
+  height:100%;
+  background:linear-gradient(
+    to bottom,
+    var(--primary),
+    var(--accent)
+  );
+  border-radius:10px;
+}
+
+.timeline-item{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6rem;
+  position:relative;
+}
+
+.timeline-item:nth-child(even){
+  flex-direction:row-reverse;
+}
+
+.timeline-content{
+  width:45%;
+  background:#fff;
+  border-radius:24px;
+  padding:2rem;
+  box-shadow:0 12px 40px rgba(0,0,0,0.06);
+  position:relative;
+  transition:0.4s;
+}
+
+.timeline-content:hover{
+  transform:translateY(-8px);
+}
+
+.timeline-step{
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:0.8rem;
+}
+
+.timeline-content h3{
+  font-family:"Playfair Display",serif;
+  font-size:2rem;
+  color:var(--primary);
+  margin-bottom:1rem;
+}
+
+.timeline-content p{
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:1.2rem;
+}
+
+.timeline-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+}
+
+.timeline-tags span{
+  padding:0.4rem 0.8rem;
+  background:#f3f4f6;
+  border-radius:50px;
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--primary);
+}
+
+.timeline-dot{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:var(--white);
+  border:4px solid var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+  font-family:"Playfair Display",serif;
+  font-size:1.5rem;
+  font-weight:900;
+  color:var(--accent);
+  box-shadow:0 0 0 10px rgba(232,131,74,0.12);
+}
+
+/* CTA */
+
+.cta{
+  padding:100px 5%;
+}
+
+.cta-box{
+  width:min(1100px,100%);
+  margin:auto;
+  background:linear-gradient(135deg,var(--primary),#2d6a9f);
+  border-radius:30px;
+  padding:5rem 2rem;
+  text-align:center;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.cta-box::before{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  top:-120px;
+  right:-120px;
+}
+
+.cta-box h2{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(2rem,5vw,3rem);
+  margin-bottom:1rem;
+}
+
+.cta-box p{
+  max-width:650px;
+  margin:auto;
+  color:rgba(255,255,255,0.75);
+  line-height:1.8;
+  margin-bottom:2rem;
+}
+
+.cta-buttons{
+  display:flex;
+  justify-content:center;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+
+.btn-primary{
+  padding:0.9rem 2rem;
+  border:none;
+  border-radius:50px;
+  background:var(--accent);
+  color:#fff;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn-secondary{
+  padding:0.9rem 2rem;
+  border:2px solid rgba(255,255,255,0.4);
+  border-radius:50px;
+  background:transparent;
+  color:#fff;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* FOOTER */
+
+footer{
+  background:#0f2540;
+  color:rgba(255,255,255,0.6);
+  text-align:center;
+  padding:2rem;
+}
+
+footer h3{
+  font-family:"Playfair Display",serif;
+  color:#fff;
+  margin-bottom:0.5rem;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.timeline::before{
+  left:30px;
+}
+
+.timeline-item,
+.timeline-item:nth-child(even){
+  flex-direction:column;
+  align-items:flex-start;
+  padding-left:80px;
+}
+
+.timeline-content{
+  width:100%;
+}
+
+.timeline-dot{
+  left:30px;
+  top:30px;
+  transform:none;
+}
+
+}
+
+</style>
+
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-inner">
+        <div class="logo" onclick="gotohome()">Kiray</div>
+        <ul class="nav-links">
+          <li><a href="kiray-index.html">Explore</a></li>
+          <li><a href="#">List Property</a></li>
+          <li><a href="how-it-works.html">How it Works</a></li>
+          <li><a href="About.html">About</a></li>
+        </ul>
+        <div class="nav-cta">
+          <!-- Logged OUT state -->
+          <div id="navAuthButtons">
+            <button class="btn-outline" onclick="openModal('login')">
+              Login
+            </button>
+            <button
+              class="btn-fill"
+              onclick="openModal('signup')"
+              style="margin-left: 0.75rem; margin-right: 0.75rem;"
+            >
+              Sign Up
+            </button>
+            <!-- Hamburger Menu -->
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+          <!-- Logged IN state -->
+          <div id="navUserArea">
+            <div class="nav-avatar" id="navAvatar"></div>
+            <div>
+              <div class="nav-username" id="navUsername"></div>
+              <div class="nav-role-badge" id="navRoleBadge"></div>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="hero-tag">
+      SIMPLE • FAST • SMART RENTALS
+    </div>
+
+    <h1>
+      How <span>Kiray</span> Works
+    </h1>
+
+    <p>
+      From discovering your perfect rental space to finalizing the deal,
+      Kiray makes the entire renting journey seamless for both tenants and owners.
+    </p>
+
+  </div>
+
+</section>
+
+<!-- TIMELINE -->
+
+<section class="timeline-section">
+
+  <div class="section-head">
+    <h2>The Rental Journey</h2>
+
+    <p>
+      Follow the complete process from search to successful move-in.
+    </p>
+  </div>
+
+  <div class="timeline">
+
+    <!-- ITEM -->
+
+    <div class="timeline-item">
+
+      <div class="timeline-content">
+
+        <div class="timeline-step">
+          STEP 01
+        </div>
+
+        <h3>Create Your Account</h3>
+
+        <p>
+          Sign up instantly using Google Authentication and choose whether
+          you want to continue as a Tenant or Property Owner.
+        </p>
+
+        <div class="timeline-tags">
+          <span>Google Login</span>
+          <span>Secure</span>
+          <span>Fast Signup</span>
+        </div>
+
+      </div>
+
+      <div class="timeline-dot">1</div>
+
+    </div>
+
+    <!-- ITEM -->
+
+    <div class="timeline-item">
+
+      <div class="timeline-content">
+
+        <div class="timeline-step">
+          STEP 02
+        </div>
+
+        <h3>Browse Properties</h3>
+
+        <p>
+          Explore curated rental listings with pricing, location,
+          amenities, and high-quality photos.
+        </p>
+
+        <div class="timeline-tags">
+          <span>Smart Search</span>
+          <span>Verified Listings</span>
+          <span>Filters</span>
+        </div>
+
+      </div>
+
+      <div class="timeline-dot">2</div>
+
+    </div>
+
+    <!-- ITEM -->
+
+    <div class="timeline-item">
+
+      <div class="timeline-content">
+
+        <div class="timeline-step">
+          STEP 03
+        </div>
+
+        <h3>Connect With Owners</h3>
+
+        <p>
+          Directly interact with property owners, ask questions,
+          negotiate pricing, and schedule visits.
+        </p>
+
+        <div class="timeline-tags">
+          <span>Chat</span>
+          <span>Meetings</span>
+          <span>Negotiation</span>
+        </div>
+
+      </div>
+
+      <div class="timeline-dot">3</div>
+
+    </div>
+
+    <!-- ITEM -->
+
+    <div class="timeline-item">
+
+      <div class="timeline-content">
+
+        <div class="timeline-step">
+          STEP 04
+        </div>
+
+        <h3>Finalize The Deal</h3>
+
+        <p>
+          Confirm rental details, complete documentation,
+          and move into your new dream property.
+        </p>
+
+        <div class="timeline-tags">
+          <span>Agreement</span>
+          <span>Verification</span>
+          <span>Move In</span>
+        </div>
+
+      </div>
+
+      <div class="timeline-dot">4</div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- CTA -->
+
+<section class="cta">
+
+  <div class="cta-box">
+
+    <h2>
+      Ready To Find Your Perfect Rental?
+    </h2>
+
+    <p>
+      Join thousands of users already using Kiray to discover better rental experiences across India.
+    </p>
+
+    <div class="cta-buttons">
+
+      <button class="btn-primary" onclick="openModal('login')">
+        Find Rentals
+      </button>
+
+      <button class="btn-secondary" onclick="openModal('login')">
+        List Property
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="logo">Kiray</div>
+      <p>
+        © 2025 Kiray. Made with ❤️ in India. Connecting tenants &amp; owners
+        directly.
+      </p>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════
+         AUTH MODAL — Firebase Powered
+         ═══════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="authModal">
+      <div class="modal">
+        <div class="modal-accent-bar"></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+
+        <div class="modal-body">
+          <!-- STATUS MESSAGE -->
+          <div class="auth-msg" id="authMsg"></div>
+
+          <!-- ROLE TOGGLE (always visible) -->
+          <div class="role-toggle" id="roleToggle">
+            <button
+              class="role-btn active"
+              id="roleCustomer"
+              onclick="setRole('customer')"
+            >
+              🔍 I'm a Tenant
+            </button>
+            <button class="role-btn" id="roleOwner" onclick="setRole('owner')">
+              🏠 I'm an Owner
+            </button>
+          </div>
+
+          <!-- ── SECTION 1: CHOOSE METHOD ── -->
+          <div class="auth-section active" id="sectionMethod">
+            <div class="modal-header">
+              <div class="modal-eyebrow" id="eyebrowText">Get started</div>
+              <h2 id="modalTitle">Welcome to Kiray</h2>
+              <p class="subtitle" id="modalSubtitle">
+                Choose how you'd like to continue
+              </p>
+            </div>
+
+            <div class="auth-methods">
+              <!-- GOOGLE -->
+              <button
+                class="btn-google"
+                id="btnGoogle"
+                onclick="handleGoogleLogin()"
+              >
+                <svg width="18" height="18" viewBox="0 0 18 18">
+                  <path
+                    fill="#4285F4"
+                    d="M17.64 9.2a10 10 0 00-.16-1.7H9v3.22h4.84a4.14 4.14 0 01-1.8 2.71v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.49z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.81.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 009 18z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M3.95 10.7A5.4 5.4 0 013.67 9c0-.59.1-1.16.28-1.7V4.97H.96A9 9 0 000 9c0 1.45.35 2.82.96 4.03l2.99-2.33z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M9 3.58c1.32 0 2.51.46 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 00.96 4.97l2.99 2.33C4.66 5.17 6.65 3.58 9 3.58z"
+                  />
+                </svg>
+                Continue with Google
+              </button>
+
+              <!-- PHONE -->
+              <button
+                class="btn-phone-toggle"
+                onclick="showSection('sectionPhone')"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"
+                  />
+                </svg>
+                Continue with Phone Number
+              </button>
+            </div>
+
+            <div class="divider">or use email</div>
+
+            <!-- EMAIL FORM -->
+            <div class="form-field">
+              <label>Email Address</label>
+              <input type="email" id="emailInput" placeholder="you@email.com" />
+            </div>
+            <div class="form-field" id="nameField" style="display: none">
+              <label>Full Name</label>
+              <input type="text" id="nameInput" placeholder="Your full name" />
+            </div>
+            <div class="form-field">
+              <label>Password</label>
+              <input
+                type="password"
+                id="passwordInput"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <button
+              class="btn-modal-submit"
+              id="submitBtn"
+              onclick="handleEmailAuth()"
+            >
+              Login
+            </button>
+
+            <div class="modal-footer" id="modalFooter">
+              Don't have an account? <a onclick="switchMode()">Sign up free</a>
+            </div>
+          </div>
+
+          <!-- ── SECTION 2: PHONE NUMBER ENTRY ── -->
+          <div class="auth-section" id="sectionPhone">
+            <button class="btn-back" onclick="showSection('sectionMethod')">
+              ← Back
+            </button>
+            <div class="modal-header">
+              <div class="modal-eyebrow">Phone Login</div>
+              <h2>Enter your number</h2>
+              <p class="subtitle">We'll send a 6-digit OTP to verify you</p>
+            </div>
+            <div class="form-field">
+              <label>Phone Number</label>
+              <input type="tel" id="phoneInput" placeholder="+91 98765 43210" />
+            </div>
+            <div id="recaptcha-container"></div>
+            <button
+              class="btn-modal-submit"
+              id="sendOtpBtn"
+              onclick="handleSendOTP()"
+            >
+              Send OTP
+            </button>
+          </div>
+
+          <!-- ── SECTION 3: OTP VERIFICATION ── -->
+          <div class="auth-section" id="sectionOTP">
+            <button class="btn-back" onclick="showSection('sectionPhone')">
+              ← Back
+            </button>
+            <div class="modal-header">
+              <div class="modal-eyebrow">Verification</div>
+              <h2>Enter OTP</h2>
+              <p class="subtitle" id="otpSubtitle">OTP sent to your phone</p>
+            </div>
+            <div class="otp-row">
+              <input
+                class="otp-box"
+                type="tel"
+                maxlength="1"
+                id="o1"
+                oninput="otpNext(this, 'o2')"
+              />
+              <input
+                class="otp-box"
+                type="tel"
+                maxlength="1"
+                id="o2"
+                oninput="otpNext(this, 'o3')"
+                onkeydown="otpBack(event, this, 'o1')"
+              />
+              <input
+                class="otp-box"
+                type="tel"
+                maxlength="1"
+                id="o3"
+                oninput="otpNext(this, 'o4')"
+                onkeydown="otpBack(event, this, 'o2')"
+              />
+              <input
+                class="otp-box"
+                type="tel"
+                maxlength="1"
+                id="o4"
+                oninput="otpNext(this, 'o5')"
+                onkeydown="otpBack(event, this, 'o3')"
+              />
+              <input
+                class="otp-box"
+                type="tel"
+                maxlength="1"
+                id="o5"
+                oninput="otpNext(this, 'o6')"
+                onkeydown="otpBack(event, this, 'o4')"
+              />
+              <input
+                class="otp-box"
+                type="tel"
+                maxlength="1"
+                id="o6"
+                onkeydown="otpBack(event, this, 'o5')"
+              />
+            </div>
+            <button
+              class="btn-modal-submit"
+              id="verifyOtpBtn"
+              onclick="handleVerifyOTP()"
+            >
+              Verify &amp; Continue
+            </button>
+            <div class="resend-row">
+              Didn't receive it?
+              <button id="resendBtn" onclick="handleSendOTP(true)" disabled>
+                Resend OTP
+              </button>
+            </div>
+          </div>
+
+          <!-- ── SECTION 4: SUCCESS ── -->
+          <div class="auth-section" id="sectionSuccess">
+            <div class="auth-success-state" style="display: block">
+              <span class="success-icon">🎉</span>
+              <h3 id="successName">Welcome to Kiray!</h3>
+              <p id="successMsg">You're now logged in. Redirecting...</p>
+            </div>
+          </div>
+        </div>
+        <!-- /modal-body -->
+      </div>
+      <!-- /modal -->
+    </div>
+    <!-- /modal-overlay -->
+
+    <!-- ════════════════════════════════════════
+         FIREBASE + AUTH LOGIC
+         ════════════════════════════════════════ -->
+    <script type="module">
+      // HAmburger menu toggle
+      // ─────────────────────────────────────
+      // MOBILE MENU
+      // ─────────────────────────────────────
+      window.toggleMenu = function () {
+        const navLinks = document.querySelector(".nav-links");
+        const hamburger = document.getElementById("hamburgerBtn");
+
+        navLinks.classList.toggle("open");
+        hamburger.classList.toggle("active");
+      };
+
+      // Close menu when clicking a link
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", () => {
+          document.querySelector(".nav-links").classList.remove("open");
+          document.getElementById("hamburgerBtn").classList.remove("active");
+        });
+      });
+
+      // ── Firebase imports (CDN ESM) ──
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        RecaptchaVerifier,
+        signInWithPhoneNumber,
+        onAuthStateChanged,
+        signOut,
+        updateProfile,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+      // ── YOUR Firebase config ──
+      const firebaseConfig = {
+        apiKey: "AIzaSyCntS97Kn555GLas3ZGSMyH4zfjaesxVrg",
+        authDomain: "kiray-4b39a.firebaseapp.com",
+        projectId: "kiray-4b39a",
+        storageBucket: "kiray-4b39a.firebasestorage.app",
+        messagingSenderId: "843443423294",
+        appId: "1:843443423294:web:bd56c542a25ec095fa696f",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const googleProvider = new GoogleAuthProvider();
+
+      // ── Expose helpers to global scope ──
+      let confirmationResult = null;
+      let resendTimer = null;
+
+      // ─────────────────────────────────────────────────────────────
+      // SAVE USER TO FIRESTORE
+      // ─────────────────────────────────────────────────────────────
+      async function saveUserToFirestore(user, role) {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) {
+          await setDoc(ref, {
+            uid: user.uid,
+            name:
+              user.displayName ||
+              document.getElementById("nameInput")?.value ||
+              "",
+            email: user.email || "",
+            phone: user.phoneNumber || "",
+            photoURL: user.photoURL || "",
+            role: role, // "customer" | "owner"
+            createdAt: new Date().toISOString(),
+          });
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // AUTH STATE LISTENER — updates nav UI
+      // ─────────────────────────────────────────────────────────────
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // Fetch role from Firestore
+          try {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            const data = snap.data() || {};
+            updateNavLoggedIn(user, data.role || "customer");
+          } catch {
+            updateNavLoggedIn(user, "customer");
+          }
+        } else {
+          updateNavLoggedOut();
+        }
+      });
+
+      function updateNavLoggedIn(user, role) {
+        document.getElementById("navAuthButtons").style.display = "none";
+        const area = document.getElementById("navUserArea");
+        area.style.display = "flex";
+
+        const avatar = document.getElementById("navAvatar");
+        if (user.photoURL) {
+          avatar.innerHTML = `<img src="${user.photoURL}" alt="avatar"/>`;
+        } else {
+          const initials = (user.displayName || user.email || "U")
+            .charAt(0)
+            .toUpperCase();
+          avatar.textContent = initials;
+        }
+
+        const name =
+          user.displayName || user.email || user.phoneNumber || "User";
+        document.getElementById("navUsername").textContent = name;
+
+        const badge = document.getElementById("navRoleBadge");
+        badge.textContent = role === "owner" ? "Owner" : "Tenant";
+        badge.className = `nav-role-badge ${role === "owner" ? "owner" : "tenant"}`;
+      }
+
+      function updateNavLoggedOut() {
+        document.getElementById("navAuthButtons").style.display = "flex";
+        document.getElementById("navUserArea").style.display = "none";
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // GOOGLE LOGIN
+      // ─────────────────────────────────────────────────────────────
+      window.handleGoogleLogin = async function () {
+        setBtnLoading("btnGoogle", true, "Connecting to Google...");
+        showMsg("", "");
+        try {
+          const result = await signInWithPopup(auth, googleProvider);
+          await saveUserToFirestore(result.user, window.currentRole);
+          showSuccess(result.user.displayName || "User");
+        } catch (err) {
+          showMsg(friendlyError(err), "error");
+          setBtnLoading("btnGoogle", false, "Continue with Google");
+        }
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // EMAIL AUTH (login + signup)
+      // ─────────────────────────────────────────────────────────────
+      window.handleEmailAuth = async function () {
+        const email = document.getElementById("emailInput").value.trim();
+        const password = document.getElementById("passwordInput").value;
+        const name = document.getElementById("nameInput")?.value?.trim();
+        const isSignup = window.currentMode === "signup";
+
+        if (!email || !password) {
+          showMsg("Please enter email and password.", "error");
+          return;
+        }
+
+        if (isSignup && !name) {
+          showMsg("Please enter your full name.", "error");
+          return;
+        }
+
+        setBtnLoading(
+          "submitBtn",
+          true,
+          isSignup ? "Creating account..." : "Logging in...",
+        );
+
+        showMsg("", "");
+
+        try {
+          let result;
+
+          // SIGNUP
+          if (isSignup) {
+            result = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password,
+            );
+
+            // Save display name in Firebase Auth
+            await updateProfile(result.user, {
+              displayName: name,
+            });
+
+            // Save user in Firestore
+            try {
+              await saveUserToFirestore(result.user, window.currentRole);
+            } catch (fireErr) {
+              console.error("Firestore Save Error:", fireErr);
+            }
+
+            // FORCE redirect
+            showSuccess(name);
+          }
+
+          // LOGIN
+          else {
+            result = await signInWithEmailAndPassword(auth, email, password);
+
+            showSuccess(result.user.displayName || email);
+          }
+        } catch (err) {
+          console.error(err);
+
+          showMsg(friendlyError(err), "error");
+
+          setBtnLoading(
+            "submitBtn",
+            false,
+            isSignup ? "Create Account" : "Login",
+          );
+        }
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // PHONE OTP — SEND
+      // ─────────────────────────────────────────────────────────────
+      window.handleSendOTP = async function (isResend = false) {
+        const phone = document.getElementById("phoneInput").value.trim();
+        if (!phone || phone.length < 10) {
+          showMsg(
+            "Please enter a valid phone number (e.g. +91 98765 43210)",
+            "error",
+          );
+          return;
+        }
+
+        setBtnLoading("sendOtpBtn", true, "Sending OTP...");
+        showMsg("", "");
+
+        try {
+          // Setup invisible reCAPTCHA only once
+          if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(
+              auth,
+              "recaptcha-container",
+              {
+                size: "invisible",
+                callback: () => {},
+              },
+            );
+          }
+
+          confirmationResult = await signInWithPhoneNumber(
+            auth,
+            phone,
+            window.recaptchaVerifier,
+          );
+          document.getElementById("otpSubtitle").textContent =
+            `OTP sent to ${phone}`;
+          showSection("sectionOTP");
+          startResendTimer();
+          showMsg(`OTP sent to ${phone}`, "success");
+        } catch (err) {
+          showMsg(friendlyError(err), "error");
+          // Reset captcha on failure
+          if (window.recaptchaVerifier) {
+            window.recaptchaVerifier.clear();
+            window.recaptchaVerifier = null;
+          }
+        } finally {
+          setBtnLoading("sendOtpBtn", false, "Send OTP");
+        }
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // PHONE OTP — VERIFY
+      // ─────────────────────────────────────────────────────────────
+      window.handleVerifyOTP = async function () {
+        const otp = ["o1", "o2", "o3", "o4", "o5", "o6"]
+          .map((id) => document.getElementById(id).value)
+          .join("");
+
+        if (otp.length < 6) {
+          showMsg("Please enter all 6 digits.", "error");
+          return;
+        }
+        if (!confirmationResult) {
+          showMsg("Session expired. Please resend OTP.", "error");
+          return;
+        }
+
+        setBtnLoading("verifyOtpBtn", true, "Verifying...");
+        showMsg("", "");
+
+        try {
+          const result = await confirmationResult.confirm(otp);
+          await saveUserToFirestore(result.user, window.currentRole);
+          showSuccess(result.user.phoneNumber || "User");
+        } catch (err) {
+          showMsg(friendlyError(err), "error");
+          setBtnLoading("verifyOtpBtn", false, "Verify & Continue");
+        }
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // LOGOUT
+      // ─────────────────────────────────────────────────────────────
+      window.handleLogout = async function () {
+        await signOut(auth);
+        updateNavLoggedOut();
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // HELPERS
+      // ─────────────────────────────────────────────────────────────
+      function showSuccess(name) {
+        document.getElementById("roleToggle").style.display = "none";
+        document.getElementById("authMsg").style.display = "none";
+        showSection("sectionSuccess");
+        document.getElementById("successName").textContent =
+          `Welcome${name ? ", " + name.split(" ")[0] : ""}! 🎉`;
+
+        const role = window.currentRole;
+        const dest =
+          role === "owner" ? "./kiray-owner.html" : "./kiray-tenant.html";
+        document.getElementById("successMsg").textContent =
+          `Taking you to your ${role === "owner" ? "Owner" : "Tenant"} Dashboard...`;
+
+        setTimeout(() => {
+          window.location.replace(dest);
+        }, 1800);
+      }
+
+      function showMsg(msg, type) {
+        const el = document.getElementById("authMsg");
+        el.textContent = msg;
+        el.className = `auth-msg ${type}`;
+        el.style.display = msg ? "block" : "none";
+      }
+
+      function setBtnLoading(id, loading, text) {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.disabled = loading;
+        btn.innerHTML = loading ? `<div class="spinner"></div>${text}` : text;
+      }
+
+      function startResendTimer() {
+        let secs = 30;
+        const btn = document.getElementById("resendBtn");
+        btn.disabled = true;
+        btn.textContent = `Resend in ${secs}s`;
+        clearInterval(resendTimer);
+        resendTimer = setInterval(() => {
+          secs--;
+          if (secs <= 0) {
+            clearInterval(resendTimer);
+            btn.disabled = false;
+            btn.textContent = "Resend OTP";
+          } else {
+            btn.textContent = `Resend in ${secs}s`;
+          }
+        }, 1000);
+      }
+
+      function friendlyError(err) {
+        const map = {
+          "auth/user-not-found": "No account found with this email.",
+          "auth/wrong-password": "Incorrect password. Try again.",
+          "auth/email-already-in-use":
+            "This email is already registered. Try logging in.",
+          "auth/weak-password": "Password must be at least 6 characters.",
+          "auth/invalid-email": "Please enter a valid email address.",
+          "auth/popup-closed-by-user": "Google sign-in was cancelled.",
+          "auth/invalid-verification-code": "Incorrect OTP. Please try again.",
+          "auth/code-expired": "OTP expired. Please request a new one.",
+          "auth/too-many-requests": "Too many attempts. Please wait a moment.",
+          "auth/invalid-phone-number":
+            "Invalid phone number. Use format: +91 98765 43210",
+        };
+        return (
+          map[err.code] ||
+          err.message ||
+          "Something went wrong. Please try again."
+        );
+      }
+
+      // OTP box auto-focus
+      window.otpNext = function (el, nextId) {
+        if (el.value && nextId) document.getElementById(nextId)?.focus();
+      };
+      window.otpBack = function (e, el, prevId) {
+        if (e.key === "Backspace" && !el.value && prevId)
+          document.getElementById(prevId)?.focus();
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // MODAL CONTROL (exposed globally)
+      // ─────────────────────────────────────────────────────────────
+      window.currentMode = "login";
+      window.currentRole = "customer";
+
+      window.showSection = function (id) {
+        document
+          .querySelectorAll(".auth-section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id)?.classList.add("active");
+        showMsg("", "");
+      };
+
+      window.openModal = function (type) {
+        document.getElementById("authModal").classList.add("open");
+        document.getElementById("roleToggle").style.display = "flex";
+        showSection("sectionMethod");
+        showMsg("", "");
+
+        if (type === "owner") {
+          setRole("owner");
+          switchMode("signup");
+        } else if (type === "signup") {
+          switchMode("signup");
+        } else {
+          switchMode("login");
+        }
+      };
+
+      window.closeModal = function () {
+        document.getElementById("authModal").classList.remove("open");
+        // reset OTP boxes
+        ["o1", "o2", "o3", "o4", "o5", "o6"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+        clearInterval(resendTimer);
+        showSection("sectionMethod");
+        showMsg("", "");
+      };
+
+      window.setRole = function (role) {
+        window.currentRole = role;
+        document
+          .getElementById("roleCustomer")
+          .classList.toggle("active", role === "customer");
+        document
+          .getElementById("roleOwner")
+          .classList.toggle("active", role === "owner");
+      };
+
+      window.switchMode = function (mode) {
+        if (mode) window.currentMode = mode;
+        else
+          window.currentMode =
+            window.currentMode === "login" ? "signup" : "login";
+        const isLogin = window.currentMode === "login";
+
+        document.getElementById("eyebrowText").textContent = isLogin
+          ? "Welcome back"
+          : "Get started";
+        document.getElementById("modalTitle").textContent = isLogin
+          ? "Login to Kiray"
+          : "Create Account";
+        document.getElementById("modalSubtitle").textContent = isLogin
+          ? "Login to continue to Kiray"
+          : "Join thousands of happy renters & owners";
+        document.getElementById("submitBtn").textContent = isLogin
+          ? "Login"
+          : "Create Account";
+        document.getElementById("nameField").style.display = isLogin
+          ? "none"
+          : "block";
+        document.getElementById("modalFooter").innerHTML = isLogin
+          ? 'Don\'t have an account? <a onclick="switchMode()">Sign up free</a>'
+          : 'Already have an account? <a onclick="switchMode()">Login</a>';
+      };
+
+      // Close on overlay click
+      document
+        .getElementById("authModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeModal();
+        });
+    
+    window.gotohome = function () {
+        window.location.href = "kiray-index.html";
+      };
+  </script>
+  </body>
+</html>
