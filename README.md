@@ -44,4 +44,3 @@ It provides dashboards for owners to manage listings and inquiries, and for tena
 
 ---
 
-## 📁 Project Structure
