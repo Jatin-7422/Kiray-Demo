@@ -1432,7 +1432,7 @@
 
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
-          window.location.href = "kiray-index.html";
+          window.location.href = "index.html";
           return;
         }
         try {
@@ -1474,7 +1474,7 @@
 
       window.handleLogout = async function () {
         await signOut(auth);
-        window.location.href = "kiray-index.html";
+        window.location.href = "index.html";
       };
 
       window.toggleMenu = function () {
